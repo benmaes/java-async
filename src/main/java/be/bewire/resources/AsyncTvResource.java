@@ -6,8 +6,6 @@ import be.bewire.common.Result;
 import be.bewire.services.ChannelService;
 import be.bewire.services.PermissionsService;
 import be.bewire.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 
 @Path("/async")
 public class AsyncTvResource {
-
-    private static final Logger LOG = LoggerFactory.getLogger(AsyncTvResource.class);
 
     private final UserService users = UserService.userService();
     private final PermissionsService permissions = PermissionsService.permissionsService();

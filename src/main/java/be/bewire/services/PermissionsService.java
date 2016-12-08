@@ -8,8 +8,6 @@ import com.google.common.util.concurrent.ListeningScheduledExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.Uninterruptibles;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -19,8 +17,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PermissionsService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PermissionsService.class);
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1,
             new ThreadFactoryBuilder().setNameFormat("permissions-service-%d").build());
@@ -42,20 +38,17 @@ public class PermissionsService {
 
     public Permissions permissions(int userId) {
         Uninterruptibles.sleepUninterruptibly(Config.PERMISSION_DELAY, TimeUnit.MILLISECONDS);
-        LOG.info("Permission lookup complete");
         return permissions.get(userId);
     }
 
     public Future<Permissions> permissionsAsync(int userId) {
         return executor.schedule(() -> {
-            LOG.info("Permission lookup complete");
             return permissions.get(userId);
         }, Config.PERMISSION_DELAY, TimeUnit.MILLISECONDS);
     }
 
     public ListenableFuture<Permissions> permissionsListenable(int userId) {
         return ls.schedule(() -> {
-            LOG.info("Permission lookup complete");
             return permissions.get(userId);
         }, Config.PERMISSION_DELAY, TimeUnit.MILLISECONDS);
     }
@@ -63,7 +56,6 @@ public class PermissionsService {
     public CompletableFuture<Permissions> permissionsCompletable(int userId) {
         CompletableFuture<Permissions> result = new CompletableFuture<>();
         executor.schedule(() -> {
-            LOG.info("Permissions look up complete");
             result.complete(permissions.get(userId));
         }, Config.PERMISSION_DELAY, TimeUnit.MILLISECONDS);
         return result;
